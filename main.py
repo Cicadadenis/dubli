@@ -1,6 +1,7 @@
 from PIL import Image
 import requests
 from io import BytesIO
+import re
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 from aiogram import Bot, types
@@ -29,14 +30,19 @@ async def start(message: Message):
     @dp.message_handler(state=sms13.sms_text)
     async def widjet(message: Message,  state: FSMContext):
         url = message.text
-        pp = url.split()
+       
+        url_pattern = r'http://[\S]+'
+ 
+        u = re.findall(url_pattern, url)
+  
+ 
         i = 0
         z = 0
-        s = len(pp)
+        s = len(u)
         dd = await message.answer(f"<b>Проверяю {s} ссылок ожидай ....</b>")
         while i <= s:
             try:
-                resource = urllib.request.urlopen(pp[i])
+                resource = urllib.request.urlopen(u[i])
                 await dd.edit_text(f"<b>Проверяю Ссылку №{i}</b>")
                 out = open("img.jpg", 'wb')
                 out.write(resource.read())
@@ -52,14 +58,15 @@ async def start(message: Message):
                     
                     i = i + 1
                 else:
-                    await message.answer(f"<b>Ссылка дубль <code>{pp[i]}</code></b>")
-                    z = z + 1
+                    await message.answer(f"<b>Ссылка дубль <code>{u[i]}</code></b>")
+                    
                     i = i + 1
             except:
-                  break 
+                  i = i + 1 
         #gg = 
+        baza.clear()
         await message.answer(
-                    f"<b>Сылки Дублей {z} шт</b>")
+                    f"<b>Готово</b>")
 
 
 if __name__ == "__main__":
