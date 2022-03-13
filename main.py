@@ -30,9 +30,12 @@ async def start(message: Message):
     @dp.message_handler(state=sms13.sms_text)
     async def widjet(message: Message,  state: FSMContext):
         url = message.text
-       
-        url_pattern = r'http://[\S]+'
- 
+        try:
+            url_pattern = r'http://[\S]+'
+        except:
+            url_pattern = r'https://[\S]+'
+
+            
         u = re.findall(url_pattern, url)
   
  
